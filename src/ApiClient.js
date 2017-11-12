@@ -11,6 +11,7 @@ function getArtist() {
   return fetch(URL).then(response => response.json())
   .then(data => data.topartists.artist)
   .then(artists => artists.map(artist => ({
+      id: artist.mbid,
       name: artist.name,
       // idPublicacion: artist.idPublicacion,
       image: artist.image[3]['#text'],
