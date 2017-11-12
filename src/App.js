@@ -21,11 +21,11 @@ export default class App extends Component<{}> {
   render() {
     return (
       <Router>
-        <Stack key="root">
+        <Scene key="root">
           <Scene key="login" component={LoginView} hideNavBar />
           <Scene key="home" component={HomeView} hideNavBar />
           <Scene key="artistDetail" component={ArtistDetailView} />
-        </Stack>
+        </Scene>
       </Router>
     );
   }

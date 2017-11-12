@@ -8,7 +8,8 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
-  Text
+  Text,
+  Button
 } from 'react-native';
 
 import FBSDK, {
@@ -18,7 +19,42 @@ import FBSDK, {
 
 import { Actions } from 'react-native-router-flux';
 
+import * as firebase from "firebase";
+
+const config = {
+  apiKey: "AIzaSyBc9KOT7SAhf3PTm9ZmOkRtUTYeSHxT9pw",
+  authDomain: "platzimusic-2e38d.firebaseapp.com",
+  databaseURL: "https://platzimusic-2e38d.firebaseio.com",
+  projectId: "platzimusic-2e38d",
+  storageBucket: "platzimusic-2e38d.appspot.com",
+  messagingSenderId: "758614405021"
+};
+firebase.initializeApp(config);
+
+const { FacebookAuthProvider } = firebase.auth;
+const firebaseAuth = firebase.auth();
+
 export default class LoginView extends Component<{}> {
+
+  state = {
+    credentials: null
+  }
+
+  componentWillMount() {
+    this.authenticateUser()
+  }
+
+  authenticateUser = () => {
+    AccessToken.getCurrentAccessToken().then((data) => {
+      const { accessToken } = data
+      const credential = FacebookAuthProvider.credential(accessToken)
+      firebaseAuth.signInWithCredential(credential).then((credentials) => {
+        Actions.home()
+      }, function(error) {
+        console.log("Sign In Error", error);
+      });
+    })
+  }
 
   handleLoginFinished = (error, result) => {
     if (error) {
@@ -26,10 +62,12 @@ export default class LoginView extends Component<{}> {
     } else if (result.isCancelled) {
       alert("login is cancelled.");
     } else {
-      AccessToken.getCurrentAccessToken().then(() => {
-        Actions.home()
-      })
+      this.authenticateUser()
     }
+  }
+
+  handleButtonPress = () => {
+    Actions.home()
   }
 
   render() {
