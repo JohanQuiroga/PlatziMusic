@@ -9,7 +9,9 @@ import {
   StyleSheet,
   View,
   Text,
-  Button
+  Button,
+  ImageBackground,
+  Image
 } from 'react-native';
 
 import FBSDK, {
@@ -61,7 +63,8 @@ export default class LoginView extends Component<{}> {
 
   render() {
     return (
-      <View style={styles.container}>
+      <ImageBackground source={require('./img/background.jpg')} style={styles.container}>
+      <Image style={styles.logo} source={require('./img/logo.png')} />
         <Text style={styles.welcome}>
           Bienvenidos a PlatziMusic
         </Text>
@@ -70,7 +73,7 @@ export default class LoginView extends Component<{}> {
           onLoginFinished={this.handleLoginFinished}
           onLogoutFinished={() => alert("logout.")}
         />
-      </View>
+      </ImageBackground>
     );
   }
 }
@@ -78,6 +81,8 @@ export default class LoginView extends Component<{}> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: null,
+    height: null,
     backgroundColor: 'lightgray',
     justifyContent: 'center',
     alignItems: 'center'
@@ -85,6 +90,13 @@ const styles = StyleSheet.create({
   welcome: {
     fontSize: 24,
     fontWeight: "600",
-    marginBottom: 20
+    marginBottom: 20,
+    backgroundColor: 'transparent',
+    color: 'white'
+  },
+  logo: {
+    width: 150,
+    height: 150,
+    marginBottom: 10,
   }
 });
