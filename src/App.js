@@ -24,7 +24,7 @@ export default class App extends Component<{}> {
         <Scene key="root">
           <Scene key="login" component={LoginView} hideNavBar />
           <Scene key="home" component={HomeView} hideNavBar />
-          <Scene key="artistDetail" component={ArtistDetailView} />
+          <Scene key="artistDetail" component={ArtistDetailView} title="Comentarios" />
         </Scene>
       </Router>
     );
