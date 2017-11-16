@@ -19,7 +19,7 @@ import { Actions } from 'react-native-router-flux';
 
 export default class ArtistList extends Component<{}> {
 
-  // _keyExtractor = (item) => item.idPublicacion;
+  _keyExtractor = (item) => item.id;
 
   constructor(props) {
     super(props);
@@ -41,9 +41,10 @@ export default class ArtistList extends Component<{}> {
     }
   }
 
-  updateDataSource = data => {
+  updateDataSource = (data) => {
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows(data)
+      // dataSource: data
     })
   }
 
@@ -53,13 +54,21 @@ export default class ArtistList extends Component<{}> {
 
   render() {
     return (
-    // <View>
-    //   <FlatList
-    //     data={this.state.dataSource}
-    //     keyExtractor={this._keyExtractor}
-    //     renderItem={({item}) => <ArtistBox artist={item} />}
-    //   />
-    // </View>
+      // <View>
+      //   <FlatList
+      //     data={this.props.artists}
+      //     keyExtractor={this._keyExtractor}
+      //     renderItem={
+      //       ({artist}) => {
+      //         return (
+      //           <TouchableOpacity onPress={() => this.handlePress(artist)}>
+      //               <ArtistBox artist={artist} />
+      //           </TouchableOpacity>
+      //         )
+      //       }
+      //     }
+      //   />
+      // </View>
       <ListView
         enableEmptySections={true}
         dataSource={this.state.dataSource}

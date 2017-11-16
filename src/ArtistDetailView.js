@@ -9,25 +9,52 @@ import {
   StyleSheet,
   View,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  Text
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import ArtistBox from './ArtistBox';
+import CommentList from './CommentList';
 
 import { getArtist } from './ApiClient';
 
 import { firebaseAuth, firebaseDatabase } from './firebase';
 
 export default class ArtistDetailView extends Component<{}> {
+  state = {
+    comments: []
+  }
+
+  componentDidMount() {
+    this.getArtistCommentsRef().on('child_added', this.addComment);
+  }
+
+  componentWillUnmount() {
+    this.getArtistCommentsRef().off('child_added', this.addComment);
+  }
+
+  addComment = (data) => {
+    const comment = data.val()
+    this.setState({
+      comments: this.state.comments.concat(comment)
+    })
+  }
 
   handleSend = () => {
+    const { uid, photoURL } = firebaseAuth.currentUser
     const { text } = this.state
     const artistCommentsRef = this.getArtistCommentsRef()
 
     var newCommentRef = artistCommentsRef.push();
-    newCommentRef.set({ text });
+    newCommentRef.set({
+      text,
+      userPhoto: photoURL,
+      uid,
+    });
+
+    this.setState({ text: '' });
   }
 
   getArtistCommentsRef = () => {
@@ -39,14 +66,18 @@ export default class ArtistDetailView extends Component<{}> {
   handleChangeText = (text) => this.setState({text})
 
   render() {
-    const artist = this.props.artist
+    const { artist } = this.props
+    const { comments } = this.state
 
     return (
       <View style={styles.container}>
         <ArtistBox artist={artist} />
+        <Text style={styles.header}>Comentarios</Text>
+        <CommentList comments={comments} />
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
+            value={this.state.text}
             placeholder="Opina sobre este artista!"
             onChangeText={this.handleChangeText}
           />
@@ -65,10 +96,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgray',
   },
   inputContainer: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    left: 0,
     height: 50,
     backgroundColor: 'white',
     paddingHorizontal: 10,
@@ -77,5 +104,10 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
+  },
+  header: {
+    fontSize: 20,
+    paddingHorizontal: 15,
+    marginVertical: 10
   }
 });
